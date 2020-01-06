@@ -33,15 +33,16 @@ app.get("/", function(req, res) {
   res.sendFile(process.cwd() + "/views/index.html");
 });
 
+app.get("/api/timestamp", function(req,res) {
+	res.json({
+		unix: Date.now(),
+		utc: new Date().toUTCString()
+	})
+})
+
 app.get("/api/timestamp/:date_string", function(req,res) {
 	const date = req.params.date_string;
-	if(date.length == 0){
-		res.json({
-			unix: Date.now(),
-			utc: new Date().toUTCString()
-		})
-	}
-	else if(isValidDate(new Date(parseInt(date)))){
+	if(isValidDate(new Date(parseInt(date)))){
 		if(dateFormat(date)){
 			res.json({
 				unix: new Date(date).getTime(),
@@ -55,7 +56,6 @@ app.get("/api/timestamp/:date_string", function(req,res) {
 			})
 		}
 	}
-
 	else{
 		res.json({
 				error : "Invalid Date"
